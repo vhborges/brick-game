@@ -21,7 +21,7 @@ InicializaVariaveis:
   push r1
 
   loadn r0, #'_'
-  store charBarra	, r0		
+  store charBarra, r0		
 
   loadn r1, #1180	; posicao inicial barra
   store posBarra, r1
