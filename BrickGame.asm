@@ -1,6 +1,8 @@
 jmp main
 
-posBola: var #4  ; confirmar se pode ser 1 byte
+;---- Declaração das variáveis do jogo ----
+
+posBola: var #4  ; !!!confirmar se pode ser 1 byte!!!
 posBarra: var #4
 charBarra: var #1
 charBolinha: var #1
@@ -53,16 +55,17 @@ ImprimeBlocos:
 
 ImprimeBolinha:
 
+
 Loop:
   call MoveBarra ; maior velocidade do jogo
 
   loadn r1, #2
   mod r1, r0, r1
   cmp r1, r2		; if (mod(c/2)==0
-  ceq MoveBolinha	; Chama Rotina de movimentacao da bolinha
+  ceq MoveBolinha	; chama rotina de movimentacao da bolinha
 
   call Delay
-  inc r0 			;c++
+  inc r0 			; incrementa o contador
   jmp Loop
 
 MoveBarra:
@@ -86,10 +89,10 @@ MoveBarra_RecalculaPos_A:
   load r1, charBarra
   loadn r2, #' '
 
-  outchar r2, r0
-  dec r0
-  outchar r1, r0
-  store posBarra, r0
+  outchar r2, r0     ; limpa a posição anterior da barra
+  dec r0             ; decrementa a posição da barra (move para esquerda)
+  outchar r1, r0     ; imprime a nova posição
+  store posBarra, r0 ; armazena a nova posição na memória
 
   pop r2
   pop r1
@@ -106,10 +109,10 @@ MoveBarra_RecalculaPos_D:
   load r1, charBarra
   loadn r2, #' '
 
-  outchar r2, r0
-  inc r0
-  outchar r1, r0
-  store posBarra, r0
+  outchar r2, r0 ; limpa a posição anterior da barra
+  inc r0         ; decrementa a posição da barra (move para esquerda)
+  outchar r1, r0 ; imprime a nova posição
+  store posBarra ; armazena a nova posição na memória    , r0
 
   pop r2
   pop r1
@@ -124,13 +127,13 @@ Delay:
   push r0
   push r1
 
-  loadn r1, #200  				; a
+  loadn r1, #200
 
-  Delay_volta2:				;Quebrou o contador acima em duas partes (dois loops de decremento)
-    loadn r0, #3000				; b
+  Delay_volta2:
+    loadn r0, #3000
 
   Delay_volta: 
-    dec r0						; (4*a + 6)b = 1000000  == 1 seg  em um clock de 1MHz
+    dec r0
     jnz Delay_volta	
     dec r1
     jnz Delay_volta2
