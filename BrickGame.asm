@@ -1,7 +1,3 @@
-; ------- TABELA DE USO DE REGISTRADORES -------
-; R0 = pos bolinha
-; R1 = pos barra
-
 jmp main
 
 posBola: var #4  ; confirmar se pode ser 1 byte
