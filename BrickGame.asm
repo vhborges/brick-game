@@ -110,7 +110,7 @@ MoveBarra_RecalculaPos_D:
   loadn r2, #' '
 
   outchar r2, r0      ; limpa a posição anterior da barra
-  inc r0              ; decrementa a posição da barra (move para esquerda)
+  inc r0              ; incrementa a posição da barra (move para direita)
   outchar r1, r0      ; imprime a nova posição
   store posBarra, r0  ; armazena a nova posição na memória
 
