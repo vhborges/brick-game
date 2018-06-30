@@ -230,7 +230,7 @@ ImprimeBlocos:
 ImprimeBlocoLoop: ; r7 = posicao inicial de print
   push r0
   
-  loadn r0, #'='
+  load r0, charBloco
   outchar r0, r7
   inc r7
   outchar r0, r7
