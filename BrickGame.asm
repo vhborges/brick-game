@@ -47,7 +47,7 @@ InicializaVariaveis:
   loadn r0, #41   ; incremento inicial da bola
   store incBola, r0
 
-  loadn r0, #1    ; o numero do incBola é negativo
+  loadn r0, #0    ; o numero do incBola é negativo
   store incBolaNegativo, r0
   
 ;---- escrevendo no primeiro vetor ----
@@ -269,7 +269,7 @@ ImprimeBola:
 Loop:
   call MoveBarra  ; maior velocidade do jogo
 
-  loadn r1, #2
+  loadn r1, #5
   mod r1, r0, r1
   cmp r1, r2      ; verifica se o resultado do mod deu zero
   ceq MoveBola ; chama rotina de movimentacao da bolinha
@@ -307,7 +307,7 @@ MoveBarra_RecalculaPos_A:
   load r0, posBarra
   loadn r5, #1121
   cmp r0, r5
-  jeq Retorna
+  jeq Retorna1
   
   mov r1, r0
   inc r1
@@ -333,7 +333,7 @@ MoveBarra_RecalculaPos_A:
   
   store posBarra, r0 ; armazena a nova posição na memória
 
-Retorna:
+Retorna1:
   pop r5
   pop r4
   pop r3
@@ -394,33 +394,111 @@ MoveBola:
   push r2
   push r3
   push r4
+  push r5
+  push r6
+  push r7
 
-  loadn r0, #' '    ;
-  load r1, posBola  ; Apaga a posição atual da bola
-  outchar r0, r1    ;
+  load r0, posBola
+  load r1, incBola
+  load r2, incBolaNegativo
+  loadn r3, #40
+  loadn r4, #1159
+  mod r5, r0, r3
+  loadn r6, #0
+  loadn r7, #39
+  
+  cmp r0, r3
+  jle RefleteBaixo
 
-  load r0, charBola         ;
-  load r2, incBola          ; obtém o valor de incremento da bola
-  load r3, incBolaNegativo  ;
+  ;cmp r0, r4
+  ;jgr RefleteCima
 
-  loadn r4, #1    ;
-  cmp r3, r4      ; verifica se o incremento é negativo
-  jeq Negativo    ;
-  add r1, r1, r2  ; se não for, adiciona o incremento da posição atual
-  jmp Pula        ; e pula a instrução de sub
-  Negativo:
-    sub r1, r1, r2  ; se for, subtrai o incremento da posição atual
-  Pula:
-    outchar r0, r1  ; escreve a nova posição da bola
+  ;cmp r5, r6
+  ;jeq RefleteDireita
 
-    store posBola, r1 ; armazena a nova posição na memória
+  ;cmp r5, r7
+  ;jeq RefleteEsquerda
 
-    pop r4
-    pop r3
-    pop r2
-    pop r1
-    pop r0
-    rts
+  Retorna2:
+    loadn r3, #' '
+    load r5, charBola
+
+    outchar r0, r3  ; apaga a a bola
+
+    loadn r4, #1    ;
+    cmp r2, r4      ; verifica se o incremento é negativo
+    jeq Negativo    ;
+    add r0, r0, r1  ; se não for, adiciona o incremento da posição atual
+    jmp Pula        ; e pula a instrução de sub
+
+    Negativo:
+      sub r0, r0, r1  ; se for, subtrai o incremento da posição atual
+
+    Pula:
+      outchar r0, r5  ; imprime a bola na nova posição
+
+      store posBola, r0 ; armazena a nova posição na memória
+      store incBola, r1
+      store incBolaNegativo, r2
+
+      pop r7
+      pop r6
+      pop r5
+      pop r4
+      pop r3
+      pop r2
+      pop r1
+      pop r0
+      rts
+
+  RefleteBaixo:
+    push r0
+
+    loadn r0, #41
+    cmp r0, r1
+    jeq RefleteBaixo1
+
+    loadn r0, #40
+    cmp r0, r1
+    jeq RefleteBaixo2
+
+    loadn r0, #39
+    cmp r0, r1
+    jeq RefleteBaixo3
+
+    Retorna3:
+      pop r0
+      jmp Retorna2
+
+    RefleteBaixo1:
+      loadn r0, #1
+      cmp r0, r2
+      jne Retorna3
+
+      loadn r1, #39
+      loadn r2, #0
+
+      jmp Retorna3
+
+    RefleteBaixo2:
+      loadn r0, #1
+      cmp r0, r2
+      jne Retorna3
+
+      loadn r1, #40
+      loadn r2, #0
+
+      jmp Retorna3
+
+    RefleteBaixo3:
+      loadn r0, #1
+      cmp r0, r2
+      jne Retorna3
+
+      loadn r1, #41
+      loadn r2, #0
+
+      jmp Retorna3
 
 Delay:
   push r0
