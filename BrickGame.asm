@@ -44,10 +44,10 @@ InicializaVariaveis:
   loadn r0, #1100 ; posicao inicial da bola
   store posBola, r0
 
-  loadn r0, #41   ; incremento inicial da bola
+  loadn r0, #40   ; incremento inicial da bola
   store incBola, r0
 
-  loadn r0, #0    ; o numero do incBola é negativo
+  loadn r0, #1    ; o incremento inicial da bola é negativo
   store incBolaNegativo, r0
   
 ;---- escrevendo no primeiro vetor ----
@@ -269,7 +269,7 @@ ImprimeBola:
 Loop:
   call MoveBarra  ; maior velocidade do jogo
 
-  loadn r1, #5
+  loadn r1, #3
   mod r1, r0, r1
   cmp r1, r2      ; verifica se o resultado do mod deu zero
   ceq MoveBola ; chama rotina de movimentacao da bolinha
@@ -333,14 +333,14 @@ MoveBarra_RecalculaPos_A:
   
   store posBarra, r0 ; armazena a nova posição na memória
 
-Retorna1:
-  pop r5
-  pop r4
-  pop r3
-  pop r2
-  pop r1
-  pop r0
-  rts
+  Retorna1:
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+    pop r0
+    rts
 
 MoveBarra_RecalculaPos_D:
   push r0 ; barra
@@ -353,7 +353,7 @@ MoveBarra_RecalculaPos_D:
   load r0, posBarra
   loadn r5, #1158
   cmp r0, r5
-  jeq Retorna
+  jeq Retorna2
   
   mov r1, r0
   inc r1
@@ -379,7 +379,7 @@ MoveBarra_RecalculaPos_D:
   
   store posBarra, r0 ; armazena a nova posição na memória
 
-  Retorna:
+  Retorna2:
     pop r5
     pop r4
     pop r3
@@ -410,8 +410,8 @@ MoveBola:
   cmp r0, r3
   jle RefleteBaixo
 
-  ;cmp r0, r4
-  ;jgr RefleteCima
+  cmp r0, r4
+  jgr RefleteCima
 
   ;cmp r5, r6
   ;jeq RefleteDireita
@@ -419,11 +419,11 @@ MoveBola:
   ;cmp r5, r7
   ;jeq RefleteEsquerda
 
-  Retorna2:
+  Retorna3:
     loadn r3, #' '
     load r5, charBola
 
-    outchar r0, r3  ; apaga a a bola
+    outchar r3, r0 ; apaga a a bola
 
     loadn r4, #1    ;
     cmp r2, r4      ; verifica se o incremento é negativo
@@ -435,7 +435,7 @@ MoveBola:
       sub r0, r0, r1  ; se for, subtrai o incremento da posição atual
 
     Pula:
-      outchar r0, r5  ; imprime a bola na nova posição
+      outchar r5, r0 ; imprime a bola na nova posição
 
       store posBola, r0 ; armazena a nova posição na memória
       store incBola, r1
@@ -466,39 +466,88 @@ MoveBola:
     cmp r0, r1
     jeq RefleteBaixo3
 
-    Retorna3:
+    Retorna4:
       pop r0
-      jmp Retorna2
+      jmp Retorna3
 
     RefleteBaixo1:
       loadn r0, #1
       cmp r0, r2
-      jne Retorna3
+      jne Retorna4
 
       loadn r1, #39
       loadn r2, #0
 
-      jmp Retorna3
+      jmp Retorna4
 
     RefleteBaixo2:
       loadn r0, #1
       cmp r0, r2
-      jne Retorna3
+      jne Retorna4
 
       loadn r1, #40
       loadn r2, #0
 
-      jmp Retorna3
+      jmp Retorna4
 
     RefleteBaixo3:
       loadn r0, #1
       cmp r0, r2
-      jne Retorna3
+      jne Retorna4
 
       loadn r1, #41
       loadn r2, #0
 
+      jmp Retorna4
+
+  RefleteCima:
+    push r0
+
+    loadn r0, #41
+    cmp r0, r1
+    jeq RefleteCima1
+
+    loadn r0, #40
+    cmp r0, r1
+    jeq RefleteCima2
+
+    loadn r0, #39
+    cmp r0, r1
+    jeq RefleteCima3
+
+    Retorna5:
+      pop r0
       jmp Retorna3
+
+    RefleteCima1:
+      loadn r0, #0
+      cmp r0, r2
+      jne Retorna5
+
+      loadn r1, #39
+      loadn r2, #1
+
+      jmp Retorna5
+
+    RefleteCima2:
+      loadn r0, #0
+      cmp r0, r2
+      jne Retorna5
+
+      loadn r1, #40
+      loadn r2, #1
+
+      jmp Retorna5
+
+    RefleteCima3:
+      loadn r0, #0
+      cmp r0, r2
+      jne Retorna5
+
+      loadn r1, #41
+      loadn r2, #1
+
+      jmp Retorna5
 
 Delay:
   push r0
