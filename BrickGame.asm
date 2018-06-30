@@ -17,6 +17,8 @@ tamBloco: var #1
 main:
   call InicializaVariaveis
   call ImprimeTela
+  ;loadn r0, #0 ; contador para os mods
+  ;loadn r2, #0 ; para verificar o resultado do módulo
   jmp Loop
 
 InicializaVariaveis:
@@ -130,7 +132,6 @@ InicializaVariaveis:
   storei r1, r0
   ;--------validade
   
-  
   pop r0
   rts
 
@@ -162,7 +163,6 @@ ImprimeBarra:
   pop r0
   
   rts
-
 
 ImprimeBlocos:
   push r0
@@ -245,26 +245,26 @@ ImprimeBlocoLoop: ; r7 = posicao inicial de print
   
   rts
 
-
-
 ImprimeBola:
 
 
 Loop:
   call MoveBarra  ; maior velocidade do jogo
 
-  loadn r1, #2
-  mod r1, r0, r1
-  cmp r1, r2      ; verifica se o resultado do mod deu zero
+  ;loadn r1, #2
+  ;mod r1, r0, r1
+  ;cmp r1, r2      ; verifica se o resultado do mod deu zero
   ;ceq MoveBola ; chama rotina de movimentacao da bolinha
 
   call Delay
-  inc r0          ; incrementa o contador
+  ;inc r0          ; incrementa o contador
   jmp Loop
 
 MoveBarra:
-  inchar r1                     ; le Teclado para controlar a barra
-  ;loadn r1, #'d'
+  push r1
+  push r2
+
+  inchar r1                     ; le teclado para controlar a barra
   loadn r2, #'a'
   cmp r1, r2
   ceq MoveBarra_RecalculaPos_A  ;chama funcao para mover para a direita se apertar A
@@ -272,6 +272,9 @@ MoveBarra:
   loadn r2, #'d'
   cmp r1, r2
   ceq MoveBarra_RecalculaPos_D  ;chama funcao para mover para a esquerda se apertar D
+
+  pop r2
+  pop r1
 
   rts
 
@@ -281,9 +284,12 @@ MoveBarra_RecalculaPos_A:
   push r2 ; barra + 1
   push r3 ; char '_'
   push r4 ; char ' '
-  
+  push r5 ; posição limite
   
   load r0, posBarra
+  loadn r5, #1121
+  cmp r0, r5
+  jeq Retorna
   
   mov r1, r0
   inc r1
@@ -307,15 +313,15 @@ MoveBarra_RecalculaPos_A:
   outchar r3, r1
   outchar r3, r2
   
-  
   store posBarra, r0 ; armazena a nova posição na memória
 
+Retorna:
+  pop r5
   pop r4
   pop r3
   pop r2
   pop r1
   pop r0
-
   rts
 
 MoveBarra_RecalculaPos_D:
@@ -324,7 +330,12 @@ MoveBarra_RecalculaPos_D:
   push r2 ; barra - 1
   push r3 ; char '_'
   push r4 ; char ' '
+  push r5 ; posição limite
+
   load r0, posBarra
+  loadn r5, #1158
+  cmp r0, r5
+  jeq Retorna
   
   mov r1, r0
   inc r1
@@ -350,12 +361,13 @@ MoveBarra_RecalculaPos_D:
   
   store posBarra, r0 ; armazena a nova posição na memória
 
+Retorna:
+  pop r5
   pop r4
   pop r3
   pop r2
   pop r1
   pop r0
-
   rts
 
 MoveBola:
@@ -376,7 +388,7 @@ Delay:
     dec r1
     jnz Delay_volta2
 
-    pop r1
-    pop r0
+  pop r1
+  pop r0
 
-    rts	
+  rts	
