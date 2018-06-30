@@ -225,7 +225,7 @@ ImprimeBlocos:
   call ImprimeBlocoLoop ; imprime quarto bloco
   
   pop r0
-
+  rts
 
 ImprimeBlocoLoop: ; r7 = posicao inicial de print
   push r0
@@ -240,7 +240,6 @@ ImprimeBlocoLoop: ; r7 = posicao inicial de print
   outchar r0, r7
   inc r7
   outchar r0, r7
-  inc r7
   
   pop r0
   
@@ -311,6 +310,8 @@ MoveBarra_RecalculaPos_A:
   
   store posBarra, r0 ; armazena a nova posição na memória
 
+  pop r4
+  pop r3
   pop r2
   pop r1
   pop r0
@@ -319,11 +320,10 @@ MoveBarra_RecalculaPos_A:
 
 MoveBarra_RecalculaPos_D:
   push r0 ; barra
-  push r1 ; barra - 1
-  push r2 ; barra + 1
+  push r1 ; barra + 1
+  push r2 ; barra - 1
   push r3 ; char '_'
   push r4 ; char ' '
-  breakp
   load r0, posBarra
   
   mov r1, r0
@@ -350,6 +350,8 @@ MoveBarra_RecalculaPos_D:
   
   store posBarra, r0 ; armazena a nova posição na memória
 
+  pop r4
+  pop r3
   pop r2
   pop r1
   pop r0
