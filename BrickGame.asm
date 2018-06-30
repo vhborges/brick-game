@@ -44,7 +44,7 @@ InicializaVariaveis:
   loadn r0, #1100 ; posicao inicial da bola
   store posBola, r0
 
-  loadn r0, #40   ; incremento inicial da bola
+  loadn r0, #41   ; incremento inicial da bola
   store incBola, r0
 
   loadn r0, #1    ; o incremento inicial da bola é negativo
@@ -413,11 +413,11 @@ MoveBola:
   cmp r0, r4
   jgr RefleteCima
 
-  ;cmp r5, r6
-  ;jeq RefleteDireita
+  cmp r5, r6
+  jeq RefleteDireita
 
-  ;cmp r5, r7
-  ;jeq RefleteEsquerda
+  cmp r5, r7
+  jeq RefleteEsquerda
 
   Retorna3:
     loadn r3, #' '
@@ -548,6 +548,104 @@ MoveBola:
       loadn r2, #1
 
       jmp Retorna5
+
+  RefleteDireita:
+    push r0
+
+    loadn r0, #41
+    cmp r0, r1
+    jeq RefleteDireita1
+
+    loadn r0, #1
+    cmp r0, r1
+    jeq RefleteDireita2
+
+    loadn r0, #39
+    cmp r0, r1
+    jeq RefleteDireita3
+
+    Retorna6:
+      pop r0
+      jmp Retorna3
+
+    RefleteDireita1:
+      loadn r0, #1
+      cmp r0, r2
+      jne Retorna6
+
+      loadn r1, #39
+      loadn r2, #1
+
+      jmp Retorna6
+
+    RefleteDireita2:
+      loadn r0, #1
+      cmp r0, r2
+      jne Retorna6
+
+      loadn r1, #1
+      loadn r2, #0
+
+      jmp Retorna6
+
+    RefleteDireita3:
+      loadn r0, #0
+      cmp r0, r2
+      jne Retorna6
+
+      loadn r1, #41
+      loadn r2, #0
+
+      jmp Retorna6
+
+  RefleteEsquerda:
+    push r0
+
+    loadn r0, #41
+    cmp r0, r1
+    jeq RefleteEsquerda1
+
+    loadn r0, #1
+    cmp r0, r1
+    jeq RefleteEsquerda2
+
+    loadn r0, #39
+    cmp r0, r1
+    jeq RefleteEsquerda3
+
+    Retorna7:
+      pop r0
+      jmp Retorna3
+
+    RefleteEsquerda1:
+      loadn r0, #0
+      cmp r0, r2
+      jne Retorna7
+
+      loadn r1, #39
+      loadn r2, #0
+
+      jmp Retorna7
+
+    RefleteEsquerda2:
+      loadn r0, #0
+      cmp r0, r2
+      jne Retorna7
+
+      loadn r1, #1
+      loadn r2, #1
+
+      jmp Retorna7
+
+    RefleteEsquerda3:
+      loadn r0, #1
+      cmp r0, r2
+      jne Retorna7
+
+      loadn r1, #41
+      loadn r2, #1
+
+      jmp Retorna7
 
 Delay:
   push r0
