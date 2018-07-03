@@ -21,6 +21,7 @@ mensagem2 : string "Pressione S para sair"
 
 main:
   call InicializaVariaveis
+  call ApagaTela
   call ImprimeTela
   loadn r0, #0 ; contador para os mods
   loadn r2, #0 ; para verificar o resultado do módulo
@@ -667,7 +668,6 @@ ImprimeGameOver:
 	call Imprimestr
       
 GameOver:
-  breakp
   inchar r6                     ; le teclado
   loadn r7, #'r'
   cmp r6, r7
@@ -712,6 +712,24 @@ ImprimestrSai:
 	pop r1
 	pop r0
 	rts		; retorno da subrotina
+
+ApagaTela:
+  push r0
+  push r1
+
+  loadn r0, #1200		; apaga as 1200 posicoes da Tela
+  loadn r1, #' '		; com "espaco"
+
+  ApagaTela_Loop:	;;label for(r0=1200;r3>0;r3--)
+    dec r0
+    outchar r1, r0
+    jnz ApagaTela_Loop
+
+  pop r1
+  pop r0
+  rts
+  
+  
   
 SairJogo:
   halt
