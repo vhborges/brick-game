@@ -13,11 +13,15 @@ charBloco: var #1
 tamBloco: var #1
 incBola: var #1
 incBolaNegativo: var #1
+mensagem0 : string "Game over!"
+mensagem1 : string "Pressione R para reiniciar"
+mensagem2 : string "Pressione S para sair"
 
 ;---- Inicio do Programa Principal -----
 
 main:
   call InicializaVariaveis
+  call ApagaTela
   call ImprimeTela
   loadn r0, #0 ; contador para os mods
   loadn r2, #0 ; para verificar o resultado do módulo
@@ -74,6 +78,7 @@ InicializaVariaveis:
   storei r1, r0
   inc r1
   storei r1, r0
+  loadn r0, #0
   inc r1
   storei r1, r0
   inc r1
@@ -174,41 +179,65 @@ ImprimeBarra:
 
 ImprimeBlocos:
   push r0
+  push r1
+  push r2
+  push r6
+  push r7
   
   ;imprime blocos do primeiro vetor
   loadn r0, #posBlocos1
+  loadn r1, #posBlocos1
+  loadn r2, #4
   
+  add r1, r1, r2
   loadi r7 ,r0 
+  loadi r6, r1
   call ImprimeBlocoLoop ; imprime primeiro bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime segundo bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime terceiro bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime quarto bloco
   ;---------------------------------------------
   
-  ;imprime blocos do segundo vetor
+  ;imprime blocos do segundo veto
   loadn r0, #posBlocos2
+  loadn r1, #posBlocos2
+  loadn r2, #4
   
+  add r1, r1, r2
+  loadi r6, r1
   loadi r7 ,r0 
   call ImprimeBlocoLoop ; imprime primeiro bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime segundo bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime terceiro bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime quarto bloco
   
@@ -216,29 +245,52 @@ ImprimeBlocos:
   
   ;imprime blocos do terceiro vetor
   loadn r0, #posBlocos3
+  loadn r1, #posBlocos3
+  loadn r2, #4
   
+  add r1, r1, r2
+  loadi r6, r1
   loadi r7 ,r0 
   call ImprimeBlocoLoop ; imprime primeiro bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime segundo bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime terceiro bloco
   
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime quarto bloco
   
+  pop r7
+  pop r6
+  pop r2
+  pop r1
   pop r0
   rts
 
-ImprimeBlocoLoop: ; r7 = posicao inicial de print
+ImprimeBlocoLoop: ; r7 = posicao inicial de print, r6 = valor de
   push r0
+  push r1
+  
+  loadn r1, #1
+  
   
   load r0, charBloco
+  cmp r6, r1
+  jeq Imprime
+  loadn r0, #' '
+  
+  Imprime:
   outchar r0, r7
   inc r7
   outchar r0, r7
@@ -249,6 +301,7 @@ ImprimeBlocoLoop: ; r7 = posicao inicial de print
   inc r7
   outchar r0, r7
   
+  pop r1
   pop r0
   
   rts
@@ -268,8 +321,8 @@ ImprimeBola:
 
 Loop:
   call MoveBarra  ; maior velocidade do jogo
-
-  loadn r1, #3
+  call ImprimeBlocos
+  loadn r1, #2
   mod r1, r0, r1
   cmp r1, r2      ; verifica se o resultado do mod deu zero
   ceq MoveBola ; chama rotina de movimentacao da bolinha
@@ -410,26 +463,26 @@ MoveBola:
   cmp r0, r3
   jle RefleteBaixo
 
-  cmp r0, r4
-  jgr RefleteCima
-
   cmp r5, r6
   jeq RefleteDireita
 
   cmp r5, r7
   jeq RefleteEsquerda
+  
+  cmp r0, r4
+  jgr ImprimeGameOver
 
   Retorna3:
-    loadn r3, #' '
-    load r5, charBola
+	loadn r3, #' '
+	load r5, charBola
 
-    outchar r3, r0 ; apaga a a bola
+	outchar r3, r0 ; apaga a a bola
 
-    loadn r4, #1    ;
-    cmp r2, r4      ; verifica se o incremento é negativo
-    jeq Negativo    ;
-    add r0, r0, r1  ; se não for, adiciona o incremento da posição atual
-    jmp Pula        ; e pula a instrução de sub
+	loadn r4, #1    ;
+	cmp r2, r4      ; verifica se o incremento é negativo
+	jeq Negativo    ;
+	add r0, r0, r1  ; se não for, adiciona o incremento da posição atual
+	jmp Pula        ; e pula a instrução de sub
 
     Negativo:
       sub r0, r0, r1  ; se for, subtrai o incremento da posição atual
@@ -646,12 +699,94 @@ MoveBola:
       loadn r2, #1
 
       jmp Retorna7
+      
+ImprimeGameOver:
+    loadn r0, #610			; Posicao na tela onde a mensagem sera' escrita
+	loadn r1, #mensagem0	; Carrega r1 com o endereco do vetor que contem a mensagem
+	loadn r2, #256
+	call Imprimestr
+	
+	loadn r0, #650			
+	loadn r1, #mensagem1	
+	loadn r2, #256
+	call Imprimestr
+	
+	loadn r0, #690			
+	loadn r1, #mensagem2	
+	loadn r2, #256
+	call Imprimestr
+      
+GameOver:
+  inchar r6                     ; le teclado
+  loadn r7, #'r'
+  cmp r6, r7
+  jeq main  ;chama main para reiniciar o jogo caso desejado
+
+  loadn r7, #'s'
+  cmp r6, r7
+  jeq SairJogo ;chama funcao para sair do jogo caso desejado
+  
+  jmp GameOver
+  
+Imprimestr:		;  Rotina de Impresao de Mensagens:    
+				; r0 = Posicao da tela que o primeiro caractere da mensagem sera' impresso
+				; r1 = endereco onde comeca a mensagem
+				; r2 = cor da mensagem
+				; Obs: a mensagem sera' impressa ate' encontrar "/0"
+				
+;---- Empilhamento: protege os registradores utilizados na subrotina na pilha para preservar seu valor				
+	push r0	; Posicao da tela que o primeiro caractere da mensagem sera' impresso
+	push r1	; endereco onde comeca a mensagem
+	push r2	; cor da mensagem
+	push r3	; Criterio de parada
+	push r4	; Recebe o codigo do caractere da Mensagem
+	
+	loadn r3, #'\0'	; Criterio de parada
+
+ImprimestrLoop:	
+	loadi r4, r1		; aponta para a memoria no endereco r1 e busca seu conteudo em r4
+	cmp r4, r3			; compara o codigo do caractere buscado com o criterio de parada
+	jeq ImprimestrSai	; goto Final da rotina
+	add r4, r2, r4		; soma a cor (r2) no codigo do caractere em r4
+	outchar r4, r0		; imprime o caractere cujo codigo está em r4 na posicao r0 da tela
+	inc r0				; incrementa a posicao que o proximo caractere sera' escrito na tela
+	inc r1				; incrementa o ponteiro para a mensagem na memoria
+	jmp ImprimestrLoop	; goto Loop
+	
+ImprimestrSai:	
+;---- Desempilhamento: resgata os valores dos registradores utilizados na Subrotina da Pilha
+	pop r4	
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	rts		; retorno da subrotina
+
+ApagaTela:
+  push r0
+  push r1
+
+  loadn r0, #1200		; apaga as 1200 posicoes da Tela
+  loadn r1, #' '		; com "espaco"
+
+  ApagaTela_Loop:	;;label for(r0=1200;r3>0;r3--)
+    dec r0
+    outchar r1, r0
+    jnz ApagaTela_Loop
+
+  pop r1
+  pop r0
+  rts
+
+  
+SairJogo:
+  halt
 
 Delay:
   push r0
   push r1
 
-  loadn r1, #200
+  loadn r1, #50
 
   Delay_volta2:
     loadn r0, #3000
