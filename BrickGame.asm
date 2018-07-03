@@ -31,7 +31,7 @@ InicializaVariaveis:
   push r0
 
   loadn r0, #'_'
-  store charBarra, r0		
+  store charBarra, r0
 
   loadn r0, #'='
   store charBloco, r0
@@ -53,21 +53,21 @@ InicializaVariaveis:
 
   loadn r0, #1    ; o incremento inicial da bola é negativo
   store incBolaNegativo, r0
-  
+ 
 ;---- escrevendo no primeiro vetor ----
-  ;--------posicao do primeiro char de cada barra. (comprimento de 5 chars por barra) 
+  ;--------posicao do primeiro char de cada barra. (comprimento de 5 chars por barra)
   loadn r0, #80
   loadn r1, #posBlocos1
-  storei r1, r0 
-  
+  storei r1, r0
+ 
   loadn r0, #90
   inc r1
   storei r1, r0
-  
+ 
   loadn r0, #100
   inc r1
   storei r1, r0
-  
+ 
   loadn r0, #110
   inc r1
   storei r1, r0
@@ -78,26 +78,27 @@ InicializaVariaveis:
   storei r1, r0
   inc r1
   storei r1, r0
+  loadn r0, #0
   inc r1
   storei r1, r0
   inc r1
   storei r1, r0
   ;--------validade
-  
+ 
 ;---- escrevendo no segundo vetor ----
   ;--------#posicao
   loadn r0, #125
   loadn r1, #posBlocos2
   storei r1, r0
-  
+ 
   loadn r0, #135
   inc r1
   storei r1, r0
-  
+ 
   loadn r0, #145
   inc r1
   storei r1, r0
-  
+ 
   loadn r0, #155
   inc r1
   storei r1, r0
@@ -113,21 +114,21 @@ InicializaVariaveis:
   inc r1
   storei r1, r0
   ;--------validade
-  
+ 
 ;---- escrevendo no terceiro vetor ----
   ;--------#posicao
   loadn r0, #160
   loadn r1, #posBlocos3
   storei r1, r0
-  
+ 
   loadn r0, #170
   inc r1
   storei r1, r0
-  
+ 
   loadn r0, #180
   inc r1
   storei r1, r0
-  
+ 
   loadn r0, #190
   inc r1
   storei r1, r0
@@ -143,7 +144,7 @@ InicializaVariaveis:
   inc r1
   storei r1, r0
   ;--------validade
-  
+ 
   pop r0
   rts
 
@@ -173,76 +174,123 @@ ImprimeBarra:
   pop r2
   pop r1
   pop r0
-  
+ 
   rts
 
 ImprimeBlocos:
   push r0
-  
+  push r1
+  push r2
+  push r6
+  push r7
+ 
   ;imprime blocos do primeiro vetor
   loadn r0, #posBlocos1
-  
+  loadn r1, #posBlocos1
+  loadn r2, #4
+ 
+  add r1, r1, r2
   loadi r7 ,r0 
+  loadi r6, r1
   call ImprimeBlocoLoop ; imprime primeiro bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime segundo bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime terceiro bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime quarto bloco
   ;---------------------------------------------
-  
-  ;imprime blocos do segundo vetor
+
+  ;imprime blocos do segundo veto
   loadn r0, #posBlocos2
-  
+  loadn r1, #posBlocos2
+  loadn r2, #4
+
+  add r1, r1, r2
+  loadi r6, r1
   loadi r7 ,r0 
   call ImprimeBlocoLoop ; imprime primeiro bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime segundo bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime terceiro bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime quarto bloco
-  
+
   ;---------------------------------------------
-  
+
   ;imprime blocos do terceiro vetor
   loadn r0, #posBlocos3
-  
+  loadn r1, #posBlocos3
+  loadn r2, #4
+
+  add r1, r1, r2
+  loadi r6, r1
   loadi r7 ,r0 
   call ImprimeBlocoLoop ; imprime primeiro bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime segundo bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime terceiro bloco
-  
+
   inc r0
+  inc r1
+  loadi r6, r1
   loadi r7, r0
   call ImprimeBlocoLoop ; imprime quarto bloco
-  
+
+  pop r7
+  pop r6
+  pop r2
+  pop r1
   pop r0
   rts
 
-ImprimeBlocoLoop: ; r7 = posicao inicial de print
+ImprimeBlocoLoop: ; r7 = posicao inicial de print, r6 = valor de
   push r0
+  push r1
+  
+  loadn r1, #1
+  
   
   load r0, charBloco
+  cmp r6, r1
+  jeq Imprime
+  loadn r0, #' '
+  
+  Imprime:
   outchar r0, r7
   inc r7
   outchar r0, r7
@@ -253,6 +301,7 @@ ImprimeBlocoLoop: ; r7 = posicao inicial de print
   inc r7
   outchar r0, r7
   
+  pop r1
   pop r0
   
   rts
@@ -272,7 +321,7 @@ ImprimeBola:
 
 Loop:
   call MoveBarra  ; maior velocidade do jogo
-
+  call ImprimeBlocos
   loadn r1, #2
   mod r1, r0, r1
   cmp r1, r2      ; verifica se o resultado do mod deu zero
@@ -402,32 +451,33 @@ MoveBola:
   push r6
   push r7
 
-  load r0, posBola
-  load r1, incBola
-  load r2, incBolaNegativo
-  loadn r3, #40
-  loadn r4, #1159
-  mod r5, r0, r3
-  loadn r6, #0
-  loadn r7, #39
+  load r0, posBola          ; posição atual da bola
+  load r1, incBola          ; incremento da bola
+  load r2, incBolaNegativo  ; indica se o incremento é negativo (1) ou positivo (0)
+  loadn r3, #40             ; usado para verificação de reflexão da bola
+  loadn r4, #1159           ; usado para verificação de game-over
+  mod r5, r0, r3            ; reflexão da bola
+  loadn r6, #0              ; reflexão da bola
+  loadn r7, #39             ; reflexão da bola
   
   cmp r0, r3
-  jle RefleteBaixo
+  jle RefleteBaixo    ; se posBola < 40, reflete para baixo
 
   cmp r5, r6
-  jeq RefleteDireita
+  jeq RefleteDireita  ; se mod(posBola/40) == 0, reflete para direita
 
   cmp r5, r7
-  jeq RefleteEsquerda
+
+  jeq RefleteEsquerda 
   
   cmp r0, r4
-  jgr ImprimeGameOver
+  jgr ImprimeGameOver ; se posBola > 1159, imprime game-over
 
-  Retorna3:
-	loadn r3, #' '
-	load r5, charBola
+  Retorna3:           ; label para auxiliar o retorno das funções chamadas acima
+	loadn r3, #' '      ; caractere para apagar a bola
+	load r5, charBola   ; caractere da bola
 
-	outchar r3, r0 ; apaga a a bola
+	outchar r3, r0  ; apaga a bola
 
 	loadn r4, #1    ;
 	cmp r2, r4      ; verifica se o incremento é negativo
@@ -441,9 +491,9 @@ MoveBola:
     Pula:
       outchar r5, r0 ; imprime a bola na nova posição
 
-      store posBola, r0 ; armazena a nova posição na memória
-      store incBola, r1
-      store incBolaNegativo, r2
+      store posBola, r0         ;
+      store incBola, r1         ; armazena as novas propriedades da bola na memória
+      store incBolaNegativo, r2 ;
 
       pop r7
       pop r6
@@ -458,198 +508,279 @@ MoveBola:
   RefleteBaixo:
     push r0
 
-    loadn r0, #41
-    cmp r0, r1
-    jeq RefleteBaixo1
+    loadn r0, #41     ;
+    cmp r0, r1        ; se o incremento da bola for igual a 41
+    jeq RefleteBaixo1 ; pula para o label que verifica o sinal do incremento
 
-    loadn r0, #40
-    cmp r0, r1
-    jeq RefleteBaixo2
+    loadn r0, #40     ;
+    cmp r0, r1        ; se o incremento da bola for igual a 40
+    jeq RefleteBaixo2 ; pula para o label que verifica o sinal do incremento
 
-    loadn r0, #39
-    cmp r0, r1
-    jeq RefleteBaixo3
+    loadn r0, #39     ;
+    cmp r0, r1        ; se o incremento da bola for igual a 39
+    jeq RefleteBaixo3 ; pula para o label que verifica o sinal do incremento
 
-    Retorna4:
-      pop r0
+    Retorna4:       ; label para auxiliar o retorno das funções chamadas acima
+      pop r0        ; se nenhum dos jumps acima se concretizar, a execução continua aqui
       jmp Retorna3
 
     RefleteBaixo1:
-      loadn r0, #1
-      cmp r0, r2
-      jne Retorna4
+      loadn r0, #1  ;
+      cmp r0, r2    ; verifica se o incremento da bola é negativo
+      jne Retorna4  ; se NÃO for não faz nada (jump if NOT equal)
 
-      loadn r1, #39
-      loadn r2, #0
+      loadn r1, #39 ; se for negativo, atualiza o valor do incremento e
+      loadn r2, #0  ; o sinal do incremento
 
       jmp Retorna4
 
     RefleteBaixo2:
-      loadn r0, #1
-      cmp r0, r2
-      jne Retorna4
-
-      loadn r1, #40
-      loadn r2, #0
+      loadn r0, #1  ;
+      cmp r0, r2    ; verifica se o incremento da bola é negativo
+      jne Retorna4  ; se NÃO for não faz nada (jump if NOT equal)
+                                                                        
+      loadn r1, #40 ; se for negativo, atualiza o valor do incremento e
+      loadn r2, #0  ; o sinal do incremento
 
       jmp Retorna4
 
     RefleteBaixo3:
-      loadn r0, #1
-      cmp r0, r2
-      jne Retorna4
-
-      loadn r1, #41
-      loadn r2, #0
+      loadn r0, #1  ;
+      cmp r0, r2    ; verifica se o incremento da bola é negativo
+      jne Retorna4  ; se NÃO for não faz nada (jump if NOT equal)
+                                                                        
+      loadn r1, #41 ; se for negativo, atualiza o valor do incremento e
+      loadn r2, #0  ; o sinal do incremento
 
       jmp Retorna4
 
-  RefleteCima:
-    push r0
+;---- Label inutilizado ----
+  ;RefleteCima:
+  ;  push r0
 
-    loadn r0, #41
-    cmp r0, r1
-    jeq RefleteCima1
+  ;  loadn r0, #41
+  ;  cmp r0, r1
+  ;  jeq RefleteCima1
 
-    loadn r0, #40
-    cmp r0, r1
-    jeq RefleteCima2
+  ;  loadn r0, #40
+  ;  cmp r0, r1
+  ;  jeq RefleteCima2
 
-    loadn r0, #39
-    cmp r0, r1
-    jeq RefleteCima3
+  ;  loadn r0, #39
+  ;  cmp r0, r1
+  ;  jeq RefleteCima3
 
-    Retorna5:
-      pop r0
-      jmp Retorna3
+  ;  Retorna5:
+  ;    pop r0
+  ;    jmp Retorna3
 
-    RefleteCima1:
-      loadn r0, #0
-      cmp r0, r2
-      jne Retorna5
+  ;  RefleteCima1:
+  ;    loadn r0, #0
+  ;    cmp r0, r2
+  ;    jne Retorna5
 
-      loadn r1, #39
-      loadn r2, #1
+  ;    loadn r1, #39
+  ;    loadn r2, #1
 
-      jmp Retorna5
+  ;    jmp Retorna5
 
-    RefleteCima2:
-      loadn r0, #0
-      cmp r0, r2
-      jne Retorna5
+  ;  RefleteCima2:
+  ;    loadn r0, #0
+  ;    cmp r0, r2
+  ;    jne Retorna5
 
-      loadn r1, #40
-      loadn r2, #1
+  ;    loadn r1, #40
+  ;    loadn r2, #1
 
-      jmp Retorna5
+  ;    jmp Retorna5
 
-    RefleteCima3:
-      loadn r0, #0
-      cmp r0, r2
-      jne Retorna5
+  ;  RefleteCima3:
+  ;    loadn r0, #0
+  ;    cmp r0, r2
+  ;    jne Retorna5
 
-      loadn r1, #41
-      loadn r2, #1
+  ;    loadn r1, #41
+  ;    loadn r2, #1
 
-      jmp Retorna5
+  ;    jmp Retorna5
 
   RefleteDireita:
     push r0
 
-    loadn r0, #41
-    cmp r0, r1
-    jeq RefleteDireita1
-
-    loadn r0, #1
-    cmp r0, r1
-    jeq RefleteDireita2
-
-    loadn r0, #39
-    cmp r0, r1
-    jeq RefleteDireita3
-
-    Retorna6:
-      pop r0
+    loadn r0, #41       ;
+    cmp r0, r1          ; se o incremento da bola for igual a 41
+    jeq RefleteDireita1 ; pula para o label que verifica o sinal do incremento
+                                                                                          
+    loadn r0, #1        ;
+    cmp r0, r1          ; se o incremento da bola for igual a 1
+    jeq RefleteDireita2 ; pula para o label que verifica o sinal do incremento
+                                                                                          
+    loadn r0, #39       ;
+    cmp r0, r1          ; se o incremento da bola for igual a 39
+    jeq RefleteDireita3 ; pula para o label que verifica o sinal do incremento
+                                                                                          
+    Retorna6:       ; label para auxiliar o retorno das funções chamadas acima
+      pop r0        ; se nenhum dos jumps acima se concretizar, a execução continua aqui
       jmp Retorna3
 
     RefleteDireita1:
-      loadn r0, #1
-      cmp r0, r2
-      jne Retorna6
-
-      loadn r1, #39
-      loadn r2, #1
-
-      jmp Retorna6
-
-    RefleteDireita2:
-      loadn r0, #1
-      cmp r0, r2
-      jne Retorna6
-
-      loadn r1, #1
-      loadn r2, #0
-
-      jmp Retorna6
-
-    RefleteDireita3:
-      loadn r0, #0
-      cmp r0, r2
-      jne Retorna6
-
-      loadn r1, #41
-      loadn r2, #0
+      loadn r0, #1  ;
+      cmp r0, r2    ; verifica se o incremento da bola é negativo
+      jne Retorna6  ; se NÃO for não faz nada (jump if NOT equal)
+                                                                         
+      loadn r1, #39 ; se for negativo, atualiza o valor do incremento e
+      loadn r2, #1  ; o sinal do incremento
+                                                                         
+      jmp Retorna6                                                       
+                                                                         
+    RefleteDireita2:                                                     
+      loadn r0, #1  ;
+      cmp r0, r2    ; verifica se o incremento da bola é negativo
+      jne Retorna6  ; se NÃO for não faz nada (jump if NOT equal)
+                                                                        
+      loadn r1, #1  ; se for negativo, atualiza o valor do incremento e
+      loadn r2, #0  ; o sinal do incremento
+                                                                         
+      jmp Retorna6                                                       
+                                                                         
+    RefleteDireita3:                                                     
+      loadn r0, #0  ;
+      cmp r0, r2    ; verifica se o incremento da bola é positivo
+      jne Retorna6  ; se NÃO for não faz nada (jump if NOT equal)
+                                                                        
+      loadn r1, #41 ; se for positivo, atualiza o valor do incremento e
+      loadn r2, #0  ; o sinal do incremento
 
       jmp Retorna6
 
   RefleteEsquerda:
     push r0
 
-    loadn r0, #41
-    cmp r0, r1
-    jeq RefleteEsquerda1
+    loadn r0, #41         ;
+    cmp r0, r1            ; se o incremento da bola for igual a 41
+    jeq RefleteEsquerda1  ; pula para o label que verifica o sinal do incremento
+                                                                                            
+    loadn r0, #1          ;
+    cmp r0, r1            ; se o incremento da bola for igual a 1
+    jeq RefleteEsquerda2  ; pula para o label que verifica o sinal do incremento
+                                                                                            
+    loadn r0, #39         ;
+    cmp r0, r1            ; se o incremento da bola for igual a 39
+    jeq RefleteEsquerda3  ; pula para o label que verifica o sinal do incremento
 
-    loadn r0, #1
-    cmp r0, r1
-    jeq RefleteEsquerda2
-
-    loadn r0, #39
-    cmp r0, r1
-    jeq RefleteEsquerda3
-
-    Retorna7:
-      pop r0
-      jmp Retorna3
-
-    RefleteEsquerda1:
-      loadn r0, #0
-      cmp r0, r2
-      jne Retorna7
-
-      loadn r1, #39
-      loadn r2, #0
+    Retorna7:         ; label para auxiliar o retorno das funções chamadas acima
+      pop r0          ; se nenhum dos jumps acima se concretizar, a execução continua aqui
+      jmp Retorna3                                                                         
+                                                                                           
+    RefleteEsquerda1: 
+      loadn r0, #0    ;
+      cmp r0, r2      ; verifica se o incremento da bola é positivo
+      jne Retorna7    ; se NÃO for não faz nada (jump if NOT equal)
+                                                                           
+      loadn r1, #39   ; se for positivo, atualiza o valor do incremento e
+      loadn r2, #0    ; o sinal do incremento
+                                                                           
+      jmp Retorna7                                                         
+                                                                           
+    RefleteEsquerda2:                                                      
+      loadn r0, #0    ;
+      cmp r0, r2      ; verifica se o incremento da bola é positivo
+      jne Retorna7    ; se NÃO for não faz nada (jump if NOT equal)
+                                                                          
+      loadn r1, #1    ; se for positivo, atualiza o valor do incremento e
+      loadn r2, #1    ; o sinal do incremento
+                                                                           
+      jmp Retorna7                                                         
+                                                                           
+    RefleteEsquerda3:                                                      
+      loadn r0, #1    ;
+      cmp r0, r2      ; verifica se o incremento da bola é negativo
+      jne Retorna7    ; se NÃO for não faz nada (jump if NOT equal)
+                                                                          
+      loadn r1, #41   ; se for negativo, atualiza o valor do incremento e
+      loadn r2, #1    ; o sinal do incremento
 
       jmp Retorna7
 
-    RefleteEsquerda2:
-      loadn r0, #0
-      cmp r0, r2
-      jne Retorna7
+ImprimeGameOver:
+    loadn r0, #610			; Posicao na tela onde a mensagem sera' escrita
+	loadn r1, #mensagem0	; Carrega r1 com o endereco do vetor que contem a mensagem
+	loadn r2, #256
+	call Imprimestr
 
-      loadn r1, #1
-      loadn r2, #1
+	loadn r0, #650
+	loadn r1, #mensagem1	
+	loadn r2, #256
+	call Imprimestr
 
-      jmp Retorna7
+	loadn r0, #690
+	loadn r1, #mensagem2
+	loadn r2, #256
+	call Imprimestr
 
-    RefleteEsquerda3:
-      loadn r0, #1
-      cmp r0, r2
-      jne Retorna7
+GameOver:
+  inchar r6                     ; le teclado
+  loadn r7, #'r'
+  cmp r6, r7
+  jeq main  ;chama main para reiniciar o jogo caso desejado
 
-      loadn r1, #41
-      loadn r2, #1
+  loadn r7, #'s'
+  cmp r6, r7
+  jeq SairJogo ;chama funcao para sair do jogo caso desejado
 
-      jmp Retorna7
+  jmp GameOver
+
+Imprimestr:		;  Rotina de Impresao de Mensagens:
+				; r0 = Posicao da tela que o primeiro caractere da mensagem sera' impresso
+				; r1 = endereco onde comeca a mensagem
+				; r2 = cor da mensagem
+				; Obs: a mensagem sera' impressa ate' encontrar "/0"
+
+;---- Empilhamento: protege os registradores utilizados na subrotina na pilha para preservar seu valor
+	push r0	; Posicao da tela que o primeiro caractere da mensagem sera' impresso
+	push r1	; endereco onde comeca a mensagem
+	push r2	; cor da mensagem
+	push r3	; Criterio de parada
+	push r4	; Recebe o codigo do caractere da Mensagem
+
+	loadn r3, #'\0'	; Criterio de parada
+
+ImprimestrLoop:
+	loadi r4, r1		; aponta para a memoria no endereco r1 e busca seu conteudo em r4
+	cmp r4, r3			; compara o codigo do caractere buscado com o criterio de parada
+	jeq ImprimestrSai	; goto Final da rotina
+	add r4, r2, r4		; soma a cor (r2) no codigo do caractere em r4
+	outchar r4, r0		; imprime o caractere cujo codigo está em r4 na posicao r0 da tela
+	inc r0				; incrementa a posicao que o proximo caractere sera' escrito na tela
+	inc r1				; incrementa o ponteiro para a mensagem na memoria
+	jmp ImprimestrLoop	; goto Loop
+
+ImprimestrSai:
+;---- Desempilhamento: resgata os valores dos registradores utilizados na Subrotina da Pilha
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	pop r0
+	rts		; retorno da subrotina
+
+ApagaTela:
+  push r0
+  push r1
+
+  loadn r0, #1200		; apaga as 1200 posicoes da Tela
+  loadn r1, #' '		; com "espaco"
+
+  ApagaTela_Loop:	;;label for(r0=1200;r3>0;r3--)
+    dec r0
+    outchar r1, r0
+    jnz ApagaTela_Loop
+
+  pop r1
+  pop r0
+  rts
+
+  jmp Retorna7
       
 ImprimeGameOver:
     loadn r0, #610			; Posicao na tela onde a mensagem sera' escrita
@@ -728,9 +859,7 @@ ApagaTela:
   pop r1
   pop r0
   rts
-  
-  
-  
+ 
 SairJogo:
   halt
 
@@ -745,11 +874,11 @@ Delay:
 
   Delay_volta: 
     dec r0
-    jnz Delay_volta	
+    jnz Delay_volta
     dec r1
     jnz Delay_volta2
 
   pop r1
   pop r0
 
-  rts	
+  rts
