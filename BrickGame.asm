@@ -419,6 +419,21 @@ MoveBola:
   cmp r5, r7
   jeq RefleteEsquerda
 
+  loadn r3, posBarra  ; r3 armazena a posição do centro da barra
+  mov r4, r3
+  mov r5, r3
+  dec r4              ; r4 armazena a posição da lateral esquerda da barra
+  inc r5              ; r5 armazena a posição da lateral direita da barra
+
+  cmp r0, r3
+  jeq RefleteBarraCentro
+
+  cmp r0, r4
+  jeq RefleteBarraEsquerda
+  
+  cmp r0, r5
+  jeq RefleteBarraDireita
+
   Retorna3:
     loadn r3, #' '
     load r5, charBola
