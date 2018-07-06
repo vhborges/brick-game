@@ -478,14 +478,14 @@ MoveBola:
   dec r4              ; r4 armazena a posição da lateral esquerda da barra
   inc r5              ; r5 armazena a posição da lateral direita da barra
 
-  cmp r0, r3
-  jeq RefleteBarraCentro
+  cmp r0, r3                ; se a bola bateu no centro da barra
+  jeq RefleteBarraCentro    ; reflete para cima
 
-  cmp r0, r4
-  jeq RefleteBarraEsquerda
+  cmp r0, r4                ; se a bola bateu na esquerda da barra
+  jeq RefleteBarraEsquerda  ; reflete para a esquerda diagonal
   
-  cmp r0, r5
-  jeq RefleteBarraDireita
+  cmp r0, r5                ; se a bola bateu na direita da barra
+  jeq RefleteBarraDireita   ; reflete para a direita diagonal
 
   Retorna3:           ; label para auxiliar o retorno das funções chamadas acima
     loadn r3, #' '      ; caractere para apagar a bola
@@ -667,19 +667,19 @@ MoveBola:
       jmp Retorna7
 
   RefleteBarraCentro:
-    loadn r1, #40
-    loadn r2, #1
-    jmp Retorna3
+    loadn r1, #40 ; atualiza o incremento para 40
+    loadn r2, #1  ; e o sinal do incremento para negativo
+    jmp Retorna3  ; retorna para o MoveBola
 
   RefleteBarraEsquerda:
-    loadn r1, #41
-    loadn r2, #1
-    jmp Retorna3
+    loadn r1, #41 ; atualiza o incremento para 41
+    loadn r2, #1  ; e o sinal do incremento para negativo
+    jmp Retorna3  ; retorna para o MoveBola
 
   RefleteBarraDireita:
-    loadn r1, #39
-    loadn r2, #1
-    jmp Retorna3
+    loadn r1, #39 ; atualiza o incremento para 39
+    loadn r2, #1  ; e o sinal do incremento para negativo
+    jmp Retorna3  ; retorna para o MoveBola
 
 ImprimeGameOver:
   loadn r0, #610			  ; Posicao na tela onde a mensagem sera' escrita
