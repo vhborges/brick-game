@@ -322,7 +322,7 @@ ImprimeBola:
 Loop:
   call MoveBarra  ; maior velocidade do jogo
   call ImprimeBlocos
-  loadn r1, #2
+  loadn r1, #10
   mod r1, r0, r1
   cmp r1, r2      ; verifica se o resultado do mod deu zero
   ceq MoveBola ; chama rotina de movimentacao da bolinha
@@ -472,7 +472,7 @@ MoveBola:
   cmp r0, r4
   jgr ImprimeGameOver ; se posBola > 1159, imprime game-over
 
-  loadn r3, posBarra  ; r3 armazena a posição do centro da barra
+  load r3, posBarra  ; r3 armazena a posição do centro da barra
   mov r4, r3
   mov r5, r3
   dec r4              ; r4 armazena a posição da lateral esquerda da barra
@@ -665,6 +665,21 @@ MoveBola:
       loadn r2, #1    ; o sinal do incremento
 
       jmp Retorna7
+
+  RefleteBarraCentro:
+    loadn r1, #40
+    loadn r2, #1
+    jmp Retorna3
+
+  RefleteBarraEsquerda:
+    loadn r1, #41
+    loadn r2, #1
+    jmp Retorna3
+
+  RefleteBarraDireita:
+    loadn r1, #39
+    loadn r2, #1
+    jmp Retorna3
 
 ImprimeGameOver:
   loadn r0, #610			  ; Posicao na tela onde a mensagem sera' escrita
