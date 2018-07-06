@@ -78,7 +78,7 @@ InicializaVariaveis:
   storei r1, r0
   inc r1
   storei r1, r0
-  loadn r0, #0
+  loadn r0, #1
   inc r1
   storei r1, r0
   inc r1
@@ -320,13 +320,13 @@ ImprimeBola:
   rts
 
 Loop:
-  call MoveBarra  ; maior velocidade do jogo
+  call ImprimeBarra
+  call MoveBarra  ; maior velocidade do jogo (sempre executa)
   call ImprimeBlocos
-  loadn r1, #10
+  loadn r1, #10   ; velocidade da bolinha (10x menor)
   mod r1, r0, r1
-  cmp r1, r2      ; verifica se o resultado do mod deu zero
-  ceq MoveBola ; chama rotina de movimentacao da bolinha
-
+  cmp r1, r2     ; verifica se o resultado do mod deu zero
+  ceq MoveBola   ; caso sim: chama rotina de movimentacao da bolinha
   call Delay
   inc r0          ; incrementa o contador
   jmp Loop
